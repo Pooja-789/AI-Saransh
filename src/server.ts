@@ -7,6 +7,7 @@ import {
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import uploadRoutes from "./uploadFile";
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -49,6 +50,7 @@ app.use('/**', (req, res, next) => {
     .catch(next);
 });
 
+
 /**
  * Start the server if this module is the main entry point.
  * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
@@ -64,3 +66,9 @@ if (isMainModule(import.meta.url)) {
  * The request handler used by the Angular CLI (dev-server and during build).
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+// Static folder for uploaded files
+app.use("/uploads", express.static("uploads"));
+
+// Use Upload Routes
+app.use("/upload", uploadRoutes);

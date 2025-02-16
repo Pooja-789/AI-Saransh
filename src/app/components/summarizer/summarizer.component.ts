@@ -2,7 +2,9 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ApiService } from '../../service/api.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import * as fs from 'fs';
+import * as path from 'path';
+import { HttpClient } from "@angular/common/http";
 @Component({
   selector: 'app-summarizer',
   imports: [CommonModule, FormsModule],
@@ -20,10 +22,12 @@ export class SummarizerComponent {
   pdfFile: File | null = null;
   // fileUrl: string = '';
   selectedFileName: string = '';
+  selectedFile: File |null = null;
   fileUrl: string | null = null;
   @ViewChild('fileInput') fileInput!: ElementRef;
 
-  constructor(private openaiService: ApiService) {}
+
+  constructor(private ollamaServive: ApiService,private http:HttpClient) {}
 
   showContent(content: string) {
     this.selectedContent = content;
@@ -37,7 +41,7 @@ export class SummarizerComponent {
     }
 
     this.isLoading = true;
-    this.openaiService.summarizeText(this.userInput, 'TEXT').subscribe({
+    this.ollamaServive.summarizeText(this.userInput, 'TEXT').subscribe({
       next: (response) => {
         this.summaryResult = response;
         this.isLoading = false;
@@ -57,7 +61,7 @@ export class SummarizerComponent {
     }
 
     this.isLoading = true;
-    this.openaiService.summarizeText(this.webpageUrl, 'URL').subscribe({
+    this.ollamaServive.summarizeText(this.webpageUrl, 'URL').subscribe({
       next: (response) => {
         this.summaryResult = response;
         this.isLoading = false;
@@ -99,7 +103,8 @@ export class SummarizerComponent {
       }
 
       this.selectedFileName = file.name;
-      this.fileUrl = URL.createObjectURL(file); // Create preview URL
+      this.selectedFile = file;
+      this.uploadFile(file); // Create preview URL
     }
   }
 
@@ -111,7 +116,8 @@ export class SummarizerComponent {
     event.preventDefault();
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       const file = event.dataTransfer.files[0];
-      this.processFile(file);
+      this.selectedFile=file;
+      this.uploadFile(file);
       // if (file.type === 'application/pdf') {
       //   this.pdfFile = file;
       //   console.log("Dropped file:", file.name);
@@ -119,17 +125,25 @@ export class SummarizerComponent {
     }
   }
 
-  processFile(file: File) {
-    if (file.type === "application/pdf") {
-      this.selectedFileName = file.name;
-      // You can add logic to upload and process the file
-    } else {
-      alert("Please select a valid PDF file.");
+  async uploadFile(source: File) {
+    if (!this.selectedFile) {
+      alert("Please select a file");
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("file", this.selectedFile);
+
+    this.http.post("http://localhost:4200/upload", formData).subscribe(
+      (response) => console.log("Upload success", response),
+      (error) => console.error("Upload error", error)
+    );
   }
   
   openFileBrowser() {
     this.fileInput.nativeElement.click();
   }
+
+  
 
 }
