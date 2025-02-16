@@ -1,0 +1,83 @@
+<div class="container">
+  <div class="topbar">
+    <h2 class="logo">Saransh</h2>
+    <ul class="menu">
+      <li class="menu-item" (click)="showContent('text')">Text Summarizer</li>
+      <li class="menu-item" (click)="showContent('webpage')">Webpage Summarizer</li>
+      <li class="menu-item" (click)="showContent('pdfpage')">PDF Summarizer</li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <!-- Initially hidden, displayed when an option is clicked -->
+    <div class="summarizer-container" *ngIf="selectedContent === 'text'">
+      <h4>Text Summarizer</h4>
+      <textarea [(ngModel)]="userInput" placeholder="Enter text to summarize"></textarea>
+      <button (click)="summarizeText()" [disabled]="isLoading">Summarize</button>
+      <div *ngIf="isLoading">Processing...</div>
+      <div *ngIf="summaryResult" class="summary-result">
+        <div class="summary-header">
+          <p>Summary:</p>
+          <div class="icon-container">
+            <i class="fas fa-copy" (click)="copyToClipboard()"></i>
+            <i class="fas fa-sync-alt" (click)="refreshSummary()"></i>
+          </div>
+        </div>
+        <div>
+          {{ summaryResult }}
+        </div>
+      </div>
+    </div>
+
+    <div class="summarizer-container" *ngIf="selectedContent === 'webpage'">
+      <h4>Webpage Summarizer</h4>
+      <input [(ngModel)]="webpageUrl" placeholder="Enter URL to summarize" />
+      <button (click)="summarizeWebpage()" [disabled]="isLoading">Summarize</button>
+      <div *ngIf="isLoading">Processing...</div>
+      <div *ngIf="summaryResult" class="summary-result">
+        <div class="summary-header">
+          <h3>Summary:</h3>
+          <div class="icon-container">
+            <i class="fas fa-copy" (click)="copyToClipboard()"></i>
+            <i class="fas fa-sync-alt" (click)="refreshSummary()"></i>
+          </div>
+        </div>
+        <p>{{ summaryResult }}</p>
+      </div>
+    </div>
+
+    <div class="summarizer-container" *ngIf="selectedContent === 'pdfpage'">
+      <h4>PDF Summarizer</h4>
+      <div class="upload-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="openFileBrowser()">
+        <div class="upload-box">
+          <i class="fas fa-file-upload upload-icon"></i>
+          <p>Drag and drop a file to summarize</p>
+          <div class="separator">
+            <span>Or</span>
+          </div>
+          <button (click)="openFileBrowser()" class="choose-file-btn">+ Choose a File</button>
+          <input type="file" #fileInput accept=".pdf" (change)="onFileSelected($event)" hidden />
+        </div>
+      </div>
+      <div *ngIf="selectedFileName" class="file-info">
+        <p><strong>Selected File:</strong> {{ selectedFileName }}</p>
+      </div>
+      <button (click)="summarizeWebpage()" [disabled]="isLoading">Summarize</button>
+      <div *ngIf="isLoading">Processing...</div>
+      <div *ngIf="summaryResult" class="summary-result">
+        <div class="summary-header">
+          <h3>Summary:</h3>
+          <div class="icon-container">
+            <i class="fas fa-copy" (click)="copyToClipboard()"></i>
+            <i class="fas fa-sync-alt" (click)="refreshSummary()"></i>
+          </div>
+        </div>
+        <p>{{ summaryResult }}</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="toast" *ngIf="showToast">
+  Summary copied to clipboard!
+</div>
