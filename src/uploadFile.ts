@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import multer, { StorageEngine } from "multer";
+import { environment } from "../environments/environment.local";
 import path from "path";
 
 const router = express.Router();
@@ -12,7 +13,7 @@ interface MulterRequest extends Request {
 // 🔹 Configure Multer Storage with TypeScript types
 const storage: StorageEngine = multer.diskStorage({
     destination: (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void): void => {
-        cb(null, "uploads/"); // Ensure this folder exists
+        cb(null, environment.fileUploadDirectory); // Ensure this folder exists
     },
     filename: (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void): void => {
         cb(null, Date.now() + "-" + file.originalname);

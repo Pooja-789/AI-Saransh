@@ -44,5 +44,7 @@ export const environment = {
     invalidFileType: 'Invalid file type. Only PDF files are allowed.',
     noRelevantInfo: 'I couldn\'t find relevant information to answer your question.',
     generalError: 'An error occurred. Please try again.'
-  }
+  },
+
+  fileUploadDirectory:'D:\\AI-Saransh\\uploads'
 }; 
