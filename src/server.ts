@@ -8,6 +8,7 @@ import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import uploadRoutes from "./uploadFile";
+import urlSummarizerRoutes from "./urlSummarizer";
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -72,3 +73,4 @@ app.use("/uploads", express.static("uploads"));
 
 // Use Upload Routes
 app.use("/upload", uploadRoutes);
+app.use("/summarize-url", urlSummarizerRoutes);

@@ -27,7 +27,7 @@ export class SummarizerComponent {
   @ViewChild('fileInput') fileInput!: ElementRef;
 
 
-  constructor(private ollamaServive: ApiService,private http:HttpClient) {}
+  constructor(private apiService: ApiService,private http:HttpClient) {}
 
   showContent(content: string) {
     this.selectedContent = content;
@@ -41,7 +41,7 @@ export class SummarizerComponent {
     }
 
     this.isLoading = true;
-    this.ollamaServive.summarizeText(this.userInput, 'TEXT').subscribe({
+    this.apiService.summarizeText(this.userInput, 'TEXT').subscribe({
       next: (response) => {
         this.summaryResult = response;
         this.isLoading = false;
@@ -59,9 +59,13 @@ export class SummarizerComponent {
       this.summaryResult = 'Please enter a URL to summarize.';
       return;
     }
-
     this.isLoading = true;
-    this.ollamaServive.summarizeText(this.webpageUrl, 'URL').subscribe({
+    
+    // this.http.get(`http://localhost:4200/summarize-url?url=${this.webpageUrl}`).subscribe(
+    //   (response) => console.log("Upload success", response),
+    //   (error) => console.error("Upload error", error)
+    // );
+    this.apiService.summarizeText(this.webpageUrl, 'URL').subscribe({
       next: (response) => {
         this.summaryResult = response;
         this.isLoading = false;
@@ -72,6 +76,7 @@ export class SummarizerComponent {
         this.isLoading = false;
       }
     });
+    
   }
 
   copyToClipboard() {
@@ -143,7 +148,4 @@ export class SummarizerComponent {
   openFileBrowser() {
     this.fileInput.nativeElement.click();
   }
-
-  
-
 }
