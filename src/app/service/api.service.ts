@@ -33,8 +33,8 @@ export class ApiService {
   }
   
   private summarizeFromUrl(url: string): Observable<string> {
-    return this.http.get<{ body: string }>(`http://localhost:4200/summarize-url?url=${encodeURIComponent(url)}`,).pipe(
-      map((response) => response.body),
+    return this.http.get<{ summary: string }>(`http://localhost:4200/summarize-url?url=${encodeURIComponent(url)}`,).pipe(
+      map((response) => response.summary),
       switchMap((content) =>
         new Observable<string>((observer) => {
           this.ollamaService
@@ -47,4 +47,5 @@ export class ApiService {
         })
       )
     );
-  }}
+  }
+}

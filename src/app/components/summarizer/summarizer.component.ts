@@ -59,12 +59,7 @@ export class SummarizerComponent {
       this.summaryResult = 'Please enter a URL to summarize.';
       return;
     }
-    this.isLoading = true;
-    
-    // this.http.get(`http://localhost:4200/summarize-url?url=${this.webpageUrl}`).subscribe(
-    //   (response) => console.log("Upload success", response),
-    //   (error) => console.error("Upload error", error)
-    // );
+    this.isLoading = true; 
     this.apiService.summarizeText(this.webpageUrl, 'URL').subscribe({
       next: (response) => {
         this.summaryResult = response;
