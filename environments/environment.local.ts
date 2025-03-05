@@ -1,7 +1,7 @@
 // Development environment
 export const environment = {  
   production: false,
-  NODE_TLS_REJECT_UNAUTHORIZED :false,
+  NODE_TLS_REJECT_UNAUTHORIZED: 0,
   // API Endpoints
   ollamaApiGenerateUrl: 'http://172.18.104.23:11434/api/generate',
   ollamaBaseUrl: 'http://172.18.104.23:11434',

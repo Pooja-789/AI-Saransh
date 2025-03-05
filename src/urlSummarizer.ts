@@ -1,10 +1,22 @@
 import express, { Request, Response } from 'express';
 import axios from 'axios';
 import { load } from 'cheerio';
+import https from 'https'; 
 import { OllamaService } from './api/OllamaService';
+import dotenv from 'dotenv';
+import { environment } from '../environments/environment.local';
 
+dotenv.config();
 const router = express.Router();
 const ollamaService = new OllamaService();
+const rejectUnauthorized: boolean = !!environment.NODE_TLS_REJECT_UNAUTHORIZED;
+
+console.log('Reject unauthorized:', rejectUnauthorized);
+const axiosInstance = axios.create({
+  httpsAgent: new https.Agent({
+    rejectUnauthorized
+  }),
+});
 
 router.get('/', async (req: Request, res: Response) => {
   // console.log('Request URL:', req.query['url']);
@@ -15,7 +27,7 @@ router.get('/', async (req: Request, res: Response) => {
   }
 
   try {
-    const response = await axios.get(requestUrl, { responseType: 'text' });
+    const response = await axiosInstance.get(requestUrl, { responseType: 'text' });
     const contentType = response.headers['content-type'] || '';
     if (!contentType.includes('text/html')) {
       return res

@@ -15,7 +15,7 @@
       <textarea [(ngModel)]="userInput" placeholder="Enter text to summarize"></textarea>
       <button (click)="summarizeText()" [disabled]="isLoading">Summarize</button>
       <div *ngIf="isLoading">Processing...</div>
-      <div *ngIf="summaryResult" class="summary-result">
+      <div *ngIf="summaryResult.length" class="summary-result">
         <div class="summary-header">
           <p>Summary:</p>
           <div class="icon-container">
@@ -23,9 +23,12 @@
             <i class="fas fa-sync-alt" (click)="refreshSummary()"></i>
           </div>
         </div>
-        <div>
+        <!-- <div>
           {{ summaryResult }}
-        </div>
+        </div> -->
+        <ul>
+          <li *ngFor="let point of summaryResult">{{ point }}</li>
+        </ul>
       </div>
     </div>
 
@@ -34,7 +37,7 @@
       <input [(ngModel)]="webpageUrl" placeholder="Enter URL to summarize" />
       <button (click)="summarizeWebpage()" [disabled]="isLoading">Summarize</button>
       <div *ngIf="isLoading">Processing...</div>
-      <div *ngIf="summaryResult" class="summary-result">
+      <div *ngIf="summaryWebpageResult.length" class="summary-result">
         <div class="summary-header">
           <h3>Summary:</h3>
           <div class="icon-container">
@@ -42,7 +45,12 @@
             <i class="fas fa-sync-alt" (click)="refreshSummary()"></i>
           </div>
         </div>
+        <!-- </div>
         <p>{{ summaryResult }}</p>
+      </div> -->
+        <ul>
+          <li *ngFor="let point of summaryWebpageResult">{{ point }}</li>
+        </ul>
       </div>
     </div>
 
@@ -62,7 +70,7 @@
       <div *ngIf="selectedFileName" class="file-info">
         <p><strong>Selected File:</strong> {{ selectedFileName }}</p>
       </div>
-      <button (click)="summarizeWebpage()" [disabled]="isLoading">Summarize</button>
+      <button (click)="summarizePdf()" [disabled]="isLoading">Summarize</button>
       <div *ngIf="isLoading">Processing...</div>
       <div *ngIf="summaryResult" class="summary-result">
         <div class="summary-header">
@@ -75,9 +83,9 @@
         <p>{{ summaryResult }}</p>
       </div>
     </div>
-
   </div>
 </div>
+
 <div class="toast" *ngIf="showToast">
   Summary copied to clipboard!
 </div>

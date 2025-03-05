@@ -5,12 +5,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class OllamaService {
-  public async summarizer(
-    question: string,
-    type: 'TEXT' | 'URL'
-  ): Promise<string | null> {
+  public async summarizer( question: string, type: 'TEXT' | 'URL' | 'PDF'): Promise<string | null> {
     try {
       let prompt;
+      if (!question.trim()) {
+        throw new Error("No text provided for summarization.");
+    }
       if (type === 'TEXT') {
         prompt = `Please summarize the following text and give the response in bullet points: ${question} `;
       } else if (type === 'URL') {
@@ -19,9 +19,7 @@ export class OllamaService {
         throw new Error('Invalid input type.');
       }
 
-      console.log(
-        `Sending request to ${environment.ollamaApiGenerateUrl} with question: ${question}`
-      );
+      console.log(`Sending request to ${environment.ollamaApiGenerateUrl} with question: ${question}`);
 
       console.log("prompt", prompt);
       const response = await fetch(environment.ollamaApiGenerateUrl, {
